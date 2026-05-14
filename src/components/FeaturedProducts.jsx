@@ -63,11 +63,6 @@ const dummyProducts = [
 
 /* ══════════════════════════════════════════════════════
    PRODUCT CARD — clean white background
-   - Background putih/abu terang
-   - Gambar proporsional dengan mix-blend-multiply
-   - Badge "Best Seller" di pojok
-   - Rating bintang + jumlah review
-   - Tombol + di kanan bawah harga
 ══════════════════════════════════════════════════════ */
 const ProductCard = ({ product }) => {
   const { addToCart } = useCart();
@@ -87,6 +82,11 @@ const ProductCard = ({ product }) => {
     setTimeout(() => setAdded(false), 1500);
   };
 
+  // Default values jika kolom tidak ada di database Supabase kita
+  const displaySize = product.size || '50 ml';
+  const displayRating = product.rating || 4.9;
+  const displayReviews = product.reviews || Math.floor(Math.random() * 50) + 50; // Random antara 50-100 review jika kosong
+
   return (
     <Link
       to={`/produk/${product.id}`}
@@ -95,7 +95,7 @@ const ProductCard = ({ product }) => {
     >
       {/* Image box — background sesuai mockup */}
       <div
-        className="relative rounded-2xl overflow-hidden mb-3 flex items-center justify-center"
+        className="relative rounded-2xl overflow-hidden mb-3 flex items-center justify-center bg-white"
         style={{
           aspectRatio: '1/1',
           background: '#F9FAFB',
@@ -156,17 +156,17 @@ const ProductCard = ({ product }) => {
 
         {/* Ukuran */}
         <span className="font-inter text-[#9CA3AF] block mb-2" style={{ fontSize: 11 }}>
-          {product.size}
+          {displaySize}
         </span>
 
         {/* Rating */}
         <div className="flex items-center gap-1 mb-3">
           <Star size={11} className="text-[#F59E0B] fill-[#F59E0B]" />
           <span className="font-inter font-semibold text-slate-600" style={{ fontSize: 11 }}>
-            {product.rating}
+            {displayRating}
           </span>
           <span className="font-inter text-[#9CA3AF]" style={{ fontSize: 11 }}>
-            ({product.reviews})
+            ({displayReviews})
           </span>
         </div>
 
@@ -236,11 +236,15 @@ const FeaturedProducts = () => {
         const { data, error } = await supabase
           .from('products')
           .select('*')
-          .eq('featured', true)
+          .order('created_at', { ascending: false }) // Ambil produk terbaru
           .limit(8);
+        
         if (error) throw error;
+        
+        // Jika data ada, gunakan data database. Jika kosong, gunakan dummyProducts
         setProducts(data && data.length > 0 ? data : dummyProducts);
-      } catch {
+      } catch (error) {
+        console.error('Error fetching:', error);
         setProducts(dummyProducts);
       } finally {
         setIsLoading(false);

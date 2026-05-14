@@ -16,13 +16,14 @@ const BookingPage = () => {
     whatsapp: ''
   });
 
-  // Fetch daftar dokter dari Supabase untuk opsi dropdown
+  // Fetch daftar dokter dari tabel 'staff' di Supabase
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
         const { data, error } = await supabase
-          .from('doctors')
-          .select('id, name, specialization, schedule');
+          .from('staff')
+          .select('id, name, schedule, credential')
+          .eq('role', 'Dokter');
         
         if (error) throw error;
         setDoctors(data || []);
@@ -46,14 +47,13 @@ const BookingPage = () => {
     setIsSubmitting(true);
 
     try {
-      // Pastikan tabel patient_submissions di Supabase sudah siap menerima data booking
       const { error } = await supabase
         .from('patient_submissions')
         .insert([
           {
             patient_name: formData.patientName,
             whatsapp_number: formData.whatsapp,
-            submission_type: `booking: ${formData.date} Jam ${formData.time}`, // Memanfaatkan kolom type untuk menyimpan detail jadwal sementara
+            submission_type: `booking: ${formData.date} Jam ${formData.time}`, 
             doctor_id: formData.doctorId,
             status: 'pending'
           }
@@ -66,7 +66,7 @@ const BookingPage = () => {
       
     } catch (error) {
       console.error('Error submitting booking:', error);
-      alert('Gagal melakukan booking. Pastikan database Supabase sudah dikonfigurasi dengan benar.');
+      alert('Gagal melakukan booking. Silakan coba lagi nanti.');
     } finally {
       setIsSubmitting(false);
     }
@@ -101,7 +101,6 @@ const BookingPage = () => {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           
-          {/* Pilihan Dokter */}
           <div className="space-y-2">
             <label className="font-inter text-sm font-medium text-slate-700">Pilih Dokter Spesialis</label>
             {isLoadingDoctors ? (
@@ -117,17 +116,16 @@ const BookingPage = () => {
                 <option value="" disabled>-- Pilih Dokter --</option>
                 {doctors.map(doc => (
                   <option key={doc.id} value={doc.id}>
-                    {doc.name} - {doc.specialization} ({doc.schedule})
+                    {doc.name} - ({doc.schedule})
                   </option>
                 ))}
               </select>
             )}
             {doctors.length === 0 && !isLoadingDoctors && (
-              <p className="text-xs text-red-500 mt-1">Belum ada data dokter di database. Silakan tambahkan via Supabase.</p>
+              <p className="text-xs text-red-500 mt-1">Belum ada data dokter. Silakan tambahkan di Admin Dashboard.</p>
             )}
           </div>
 
-          {/* Jadwal (Tanggal & Waktu) */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2 relative">
               <label className="font-inter text-sm font-medium text-slate-700">Tanggal Kunjungan</label>

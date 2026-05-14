@@ -9,7 +9,7 @@ const AboutPage = () => {
         <div className="flex flex-col md:flex-row items-center gap-10 lg:gap-16 mb-20">
           <div className="w-full md:w-1/2 relative">
             <div className="absolute inset-0 bg-roseTint rounded-full blur-3xl opacity-50 transform -translate-x-10 translate-y-10"></div>
-            <img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?q=80&w=800&auto=format&fit=crop" alt="Klinik Sesa" className="relative z-10 w-full rounded-3xl shadow-lg border-8 border-white object-cover aspect-video md:aspect-[4/3]" />
+            <img src="https://i.pinimg.com/1200x/67/98/c1/6798c156e09e6bd2d147b29edbc4982c.jpg" alt="Klinik Sesa" className="relative z-10 w-full rounded-3xl shadow-lg border-8 border-white object-cover aspect-video md:aspect-[4/3]" />
           </div>
           
           <div className="w-full md:w-1/2">
