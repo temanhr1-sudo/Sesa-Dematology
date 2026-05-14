@@ -62,7 +62,7 @@ const UploadResepPage = () => {
       if (dbError) throw dbError;
 
       // 3. Notifikasi via WhatsApp ke Admin
-      const adminWA = "6281399822063"; 
+      const adminWA = "62895416801490"; 
       const message = `Halo Admin SESA! 👋\nSaya ingin menebus Resep Dokter.\n\n` +
         `*👤 Data Pasien:*\n` +
         `- Nama: ${formData.patientName}\n` +

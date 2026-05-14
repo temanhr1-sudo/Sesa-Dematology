@@ -220,7 +220,7 @@ const ClinicInformation = () => {
                     ))}
                   </ul>
                   <a
-                    href="https://wa.me/6281399822063?text=Halo,%20saya%20ingin%20konsultasi%20dengan%20apoteker"
+                    href="https://wa.me/62895416801490?text=Halo,%20saya%20ingin%20konsultasi%20dengan%20apoteker"
                     target="_blank" rel="noopener noreferrer"
                     className="flex items-center justify-center gap-2 text-white font-inter font-semibold text-[12px] rounded-xl py-2.5 transition-all active:scale-95"
                     style={{ background: 'linear-gradient(135deg, #8B5CF6, #7C3AED)', boxShadow: '0 4px 14px rgba(139,92,246,0.35)' }}
@@ -266,7 +266,7 @@ const ClinicInformation = () => {
                     </ul>
                   </div>
                   <a
-                    href="https://wa.me/6281399822063?text=Halo,%20saya%20ingin%20konsultasi%20masalah%20kulit"
+                    href="https://wa.me/62895416801490?text=Halo,%20saya%20ingin%20konsultasi%20masalah%20kulit"
                     target="_blank" rel="noopener noreferrer"
                     className="flex items-center justify-center gap-2 text-white font-inter font-semibold text-[12px] rounded-xl py-2.5 mt-4 transition-all active:scale-95"
                     style={{ background: 'linear-gradient(135deg, #EC6BA5, #D4538E)', boxShadow: '0 4px 14px rgba(236,107,165,0.38)' }}

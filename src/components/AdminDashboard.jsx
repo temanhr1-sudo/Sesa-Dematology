@@ -4,6 +4,21 @@ import { supabase } from '../lib/supabaseClient';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import ReactQuill from 'react-quill-new';
+import 'react-quill-new/dist/quill.snow.css';
+
+const quillModules = {
+  toolbar: [
+    [{ header: [1, 2, 3, false] }],
+    ['bold', 'italic', 'underline', 'strike'],
+    [{ list: 'ordered' }, { list: 'bullet' }],
+    [{ align: [] }],
+    ['link', 'blockquote'],
+    ['clean'],
+  ],
+};
+const quillFormats = ['header','bold','italic','underline','strike','list','bullet','align','link','blockquote'];
+
 
 const AdminDashboard = () => {
   const { user, logout } = useAuth();
@@ -745,7 +760,15 @@ const AdminDashboard = () => {
                 <input type="text" placeholder="Nama Penulis" required className="w-full border border-softGray rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none" onChange={e => setNewArticle({...newArticle, author: e.target.value})} />
               </div>
               <textarea placeholder="Ringkasan Singkat..." required className="w-full border border-softGray rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none h-20 resize-none" onChange={e => setNewArticle({...newArticle, excerpt: e.target.value})}></textarea>
-              <textarea placeholder="Isi Artikel Lengkap (HTML)..." required className="w-full border border-softGray rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none h-40" onChange={e => setNewArticle({...newArticle, content: e.target.value})}></textarea>
+<div>
+  <label className="text-xs font-bold text-slate-500 uppercase tracking-wide block mb-1">Isi Artikel</label>
+  <div className="border border-softGray rounded-xl overflow-hidden">
+    <ReactQuill theme="snow" value={newArticle.content}
+      onChange={(val) => setNewArticle({...newArticle, content: val})}
+      modules={quillModules} formats={quillFormats} style={{ height: 260 }} />
+  </div>
+  <div style={{ height: 42 }} />
+</div>
               <div className="border-2 border-dashed border-softGray rounded-xl p-4 text-center">
                 <input type="file" accept="image/*" onChange={e => setImageFile(e.target.files[0])} className="hidden" id="articleImageUpload" />
                 <label htmlFor="articleImageUpload" className="cursor-pointer flex flex-col items-center justify-center gap-2">
@@ -777,7 +800,15 @@ const AdminDashboard = () => {
                 <input type="text" value={editArticle.author} required className="w-full border border-softGray rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none" onChange={e => setEditArticle({...editArticle, author: e.target.value})} />
               </div>
               <textarea value={editArticle.excerpt} required className="w-full border border-softGray rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none h-20 resize-none" onChange={e => setEditArticle({...editArticle, excerpt: e.target.value})}></textarea>
-              <textarea value={editArticle.content} required className="w-full border border-softGray rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none h-40" onChange={e => setEditArticle({...editArticle, content: e.target.value})}></textarea>
+<div>
+  <label className="text-xs font-bold text-slate-500 uppercase tracking-wide block mb-1">Isi Artikel</label>
+  <div className="border border-softGray rounded-xl overflow-hidden">
+    <ReactQuill theme="snow" value={editArticle.content}
+      onChange={(val) => setEditArticle({...editArticle, content: val})}
+      modules={quillModules} formats={quillFormats} style={{ height: 260 }} />
+  </div>
+  <div style={{ height: 42 }} />
+</div>
               <div className="border-2 border-dashed border-softGray rounded-xl p-4 text-center">
                 <input type="file" accept="image/*" onChange={e => setImageFile(e.target.files[0])} className="hidden" id="editArticleImageUpload" />
                 <label htmlFor="editArticleImageUpload" className="cursor-pointer flex flex-col items-center justify-center gap-2">

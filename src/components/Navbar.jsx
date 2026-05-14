@@ -21,7 +21,7 @@ const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState('');
 
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0); // Diperbaiki: dari item.qty ke item.quantity sesuai CartContext
-  const waLink = "https://wa.me/6281399822063?text=Halo%20SESA%20Dermatology,%20saya%20ingin%20berkonsultasi.";
+  const waLink = "https://wa.me/62895416801490?text=Halo%20SESA%20Dermatology,%20saya%20ingin%20berkonsultasi.";
 
   const navLinks = [
     { to: '/', label: 'Beranda' },

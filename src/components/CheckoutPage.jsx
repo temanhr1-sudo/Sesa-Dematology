@@ -32,7 +32,7 @@ const CheckoutPage = () => {
     }
 
     // Nomor WhatsApp Admin Klinik SESA (Ganti dengan yang asli)
-    const adminWA = "6281399822063"; 
+    const adminWA = "62895416801490"; 
 
     // Menyusun daftar pesanan
     let orderList = "";

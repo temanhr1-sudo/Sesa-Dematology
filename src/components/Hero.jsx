@@ -20,7 +20,7 @@ const WaIcon = () => (
 );
 
 const Hero = () => {
-  const waLink = "https://wa.me/6281399822063?text=Halo%20SESA%20Dermatology,%20saya%20ingin%20berkonsultasi.";
+  const waLink = "https://wa.me/62895416801490?text=Halo%20SESA%20Dermatology,%20saya%20ingin%20berkonsultasi.";
 
   return (
     <section className="relative bg-gradient-to-br from-[#FFF0F6] via-[#FFF5F9] to-white overflow-hidden">

@@ -76,7 +76,7 @@ const BookingPage = () => {
       if (dbError) throw dbError;
 
       // 2. Format WhatsApp ke Admin
-      const adminWA = "6281399822063"; 
+      const adminWA = "62895416801490"; 
       const message = `Halo Admin SESA! 👋\nSaya ingin konfirmasi Booking Jadwal Dokter.\n\n` +
         `*🩺 Detail Jadwal:*\n` +
         `- Dokter: dr. ${formData.doctorName}\n` +

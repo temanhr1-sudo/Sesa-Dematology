@@ -53,7 +53,7 @@ const ConsultationPage = () => {
             Tim dokter kami siap membantu memberikan solusi terbaik untuk perjalanan menuju kulit sehat Anda.
           </p>
           <a 
-            href="https://wa.me/6281234567890" 
+            href="https://wa.me/62895416801490" 
             target="_blank" 
             rel="noopener noreferrer" 
             className="inline-flex items-center justify-center gap-3 bg-primary hover:bg-darkPink text-white font-poppins font-semibold px-8 py-4 rounded-xl transition-all shadow-md hover:shadow-lg"
