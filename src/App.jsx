@@ -20,9 +20,10 @@ import ArticleDetail from './components/ArticleDetail';
 import AboutPage from './components/AboutPage';
 import ContactPage from './components/ContactPage';
 import ConsultationPage from './components/ConsultationPage';
-import TrackingPage from './components/TrackingPage'; // IMPORT BARU
+import TrackingPage from './components/TrackingPage';
 
-ReactGA.initialize('G-KODEPELACAKKAMU');
+// ID GOOGLE ANALYTICS RESMI
+ReactGA.initialize('G-B7BQVM3YRT');
 
 const AnalyticsTracker = () => {
   const location = useLocation();
@@ -56,7 +57,7 @@ const AppLayout = () => {
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/upload-resep" element={<UploadResepPage />} />
           <Route path="/booking" element={<BookingPage />} />
-          <Route path="/lacak-pesanan" element={<TrackingPage />} /> {/* ROUTE BARU */}
+          <Route path="/lacak-pesanan" element={<TrackingPage />} />
           
           <Route path="/artikel" element={<ArticlePage />} />
           <Route path="/artikel/:id" element={<ArticleDetail />} />
