@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Search, ShoppingBag, User, Menu, X } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 
@@ -12,8 +12,15 @@ const WaIcon = () => (
 const Navbar = () => {
   const { cart } = useCart();
   const location = useLocation();
+  const navigate = useNavigate(); // Fungsi untuk pindah halaman
+  
   const [mobileOpen, setMobileOpen] = useState(false);
-  const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+  
+  // State untuk kotak pencarian
+  const [showSearch, setShowSearch] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0); // Diperbaiki: dari item.qty ke item.quantity sesuai CartContext
   const waLink = "https://wa.me/6281399822063?text=Halo%20SESA%20Dermatology,%20saya%20ingin%20berkonsultasi.";
 
   const navLinks = [
@@ -26,6 +33,17 @@ const Navbar = () => {
     { to: '/kontak', label: 'Kontak' },
   ];
 
+  // Fungsi Eksekusi Pencarian
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim() !== '') {
+      navigate(`/produk?q=${encodeURIComponent(searchQuery.trim())}`);
+      setShowSearch(false);
+      setSearchQuery('');
+      setMobileOpen(false); // Tutup menu mobile jika pencarian dari mobile
+    }
+  };
+
   return (
     <header className="bg-white sticky top-0 z-50 border-b border-[#fce7f0] shadow-[0_1px_0_0_#fce7f0]">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-10">
@@ -36,7 +54,8 @@ const Navbar = () => {
             <img
               src="/images/Sesa.jpeg"
               alt="SESA Dermatology"
-              className="h-[48px] w-[48px] object-contain"
+              className="h-[48px] w-[48px] object-contain rounded-full"
+              onError={(e) => { e.target.style.display = 'none'; }}
             />
             <div className="flex flex-col leading-none">
               <span
@@ -78,22 +97,50 @@ const Navbar = () => {
           <div className="flex items-center gap-3 xl:gap-4">
             {/* Icon buttons — desktop */}
             <div className="hidden md:flex items-center gap-3">
-              <button aria-label="Cari" className="text-[#9CA3AF] hover:text-[#EC6BA5] transition-colors">
-                <Search size={20} />
-              </button>
+              
+              {/* INTERAKTIF: Kotak Pencarian */}
+              {showSearch ? (
+                <form onSubmit={handleSearchSubmit} className="relative flex items-center animate-in fade-in zoom-in-95 duration-200">
+                  <input
+                    type="text"
+                    autoFocus
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Cari produk..."
+                    className="border border-[#EC6BA5] rounded-full pl-4 pr-8 py-1.5 text-sm outline-none focus:ring-1 focus:ring-[#EC6BA5] w-48 xl:w-56 font-inter transition-all bg-white"
+                  />
+                  <button 
+                    type="button" 
+                    onClick={() => setShowSearch(false)} 
+                    className="absolute right-2.5 text-slate-400 hover:text-[#EC6BA5] transition-colors"
+                  >
+                    <X size={16} />
+                  </button>
+                </form>
+              ) : (
+                <button 
+                  onClick={() => setShowSearch(true)} 
+                  aria-label="Cari" 
+                  className="text-[#9CA3AF] hover:text-[#EC6BA5] transition-colors p-1"
+                >
+                  <Search size={20} />
+                </button>
+              )}
+
               <Link
                 to="/checkout"
                 aria-label="Keranjang"
-                className="relative text-[#9CA3AF] hover:text-[#EC6BA5] transition-colors"
+                className="relative text-[#9CA3AF] hover:text-[#EC6BA5] transition-colors p-1"
               >
                 <ShoppingBag size={20} />
                 {totalItems > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-[#D4538E] text-white text-[10px] font-bold w-[18px] h-[18px] rounded-full flex items-center justify-center leading-none">
+                  <span className="absolute -top-1.5 -right-1.5 bg-[#D4538E] text-white text-[10px] font-bold w-[18px] h-[18px] rounded-full flex items-center justify-center leading-none">
                     {totalItems}
                   </span>
                 )}
               </Link>
-              <Link to="/admin" aria-label="Akun" className="text-[#9CA3AF] hover:text-[#EC6BA5] transition-colors">
+              
+              <Link to="/admin" aria-label="Akun" className="text-[#9CA3AF] hover:text-[#EC6BA5] transition-colors p-1">
                 <User size={20} />
               </Link>
             </div>
@@ -123,24 +170,60 @@ const Navbar = () => {
 
       {/* ── MOBILE MENU ── */}
       {mobileOpen && (
-        <div className="lg:hidden bg-white border-t border-[#fce7f0] px-5 py-4 flex flex-col gap-1 shadow-md">
+        <div className="lg:hidden bg-white border-t border-[#fce7f0] px-5 py-4 flex flex-col gap-1 shadow-md absolute w-full left-0 animate-in slide-in-from-top-2">
+          
+          {/* Pencarian Mobile */}
+          <form onSubmit={handleSearchSubmit} className="relative mb-3 flex items-center">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Cari produk SESA..."
+              className="w-full bg-[#f8f9fa] border border-[#fce7f0] rounded-xl pl-10 pr-4 py-2.5 text-sm outline-none focus:border-[#EC6BA5] font-inter"
+            />
+            <Search size={16} className="absolute left-4 text-slate-400" />
+          </form>
+
           {navLinks.map(({ to, label }) => (
             <Link
               key={to}
               to={to}
               onClick={() => setMobileOpen(false)}
-              className={`font-inter text-[15px] font-medium py-2.5 border-b border-[#fce7f0] last:border-0 ${
+              className={`font-inter text-[15px] font-medium py-3 border-b border-[#fce7f0] last:border-0 flex items-center justify-between ${
                 location.pathname === to ? 'text-[#EC6BA5]' : 'text-[#4B5563]'
               }`}
             >
               {label}
             </Link>
           ))}
+          
+          <div className="flex gap-3 mt-3 border-t border-[#fce7f0] pt-4">
+            <Link
+              to="/checkout"
+              onClick={() => setMobileOpen(false)}
+              className="flex-1 bg-[#f8f9fa] text-slate-700 font-inter font-semibold px-5 py-3 rounded-xl flex items-center justify-center gap-2 text-[14px] border border-softGray relative"
+            >
+              <ShoppingBag size={18} /> Keranjang
+              {totalItems > 0 && (
+                <span className="bg-[#D4538E] text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center leading-none absolute top-1.5 right-4">
+                  {totalItems}
+                </span>
+              )}
+            </Link>
+            <Link
+              to="/admin"
+              onClick={() => setMobileOpen(false)}
+              className="flex-shrink-0 bg-[#f8f9fa] text-slate-700 font-inter font-semibold w-12 rounded-xl flex items-center justify-center border border-softGray"
+            >
+              <User size={18} />
+            </Link>
+          </div>
+          
           <a
             href={waLink}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-3 bg-[#EC6BA5] text-white font-inter font-semibold px-5 py-3 rounded-full flex items-center justify-center gap-2 text-[14px]"
+            className="mt-3 bg-[#EC6BA5] text-white font-inter font-semibold px-5 py-3 rounded-xl flex items-center justify-center gap-2 text-[14px]"
           >
             <WaIcon /> Chat WhatsApp
           </a>

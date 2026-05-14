@@ -61,7 +61,7 @@ const Footer = () => {
     { to: '/upload-resep', label: 'Upload Resep' },
     { to: '/booking', label: 'Booking Dokter' },
     { to: '/produk', label: 'Produk Skincare' },
-    { to: '#', label: 'Pengiriman Obat' },
+    { to: '/lacak-pesanan', label: 'Cek Status Pesanan' }, // Diubah agar mengarah ke fitur tracking
   ];
 
   return (
@@ -77,7 +77,7 @@ const Footer = () => {
               <img
                 src="/images/Sesa.jpeg"
                 alt="SESA Dermatology"
-                className="h-[52px] w-[52px] object-contain"
+                className="h-[52px] w-[52px] object-contain rounded-full"
               />
               <div className="flex flex-col leading-none">
                 <span

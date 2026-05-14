@@ -1,80 +1,148 @@
-import { Plus, Star } from 'lucide-react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Star, Plus, ShoppingCart } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 
-/**
- * ProductCard
- * Props: id, title, category, size, price, imageUrl, rating, reviews, badge
- */
-const ProductCard = ({ id, title, category, size, price, imageUrl, rating = 4.8, reviews, badge }) => {
+const ProductCard = ({ product }) => {
   const { addToCart } = useCart();
+  const [added, setAdded] = useState(false);
 
-  const handleAddToCart = (e) => {
+  // Mencegah error jika product undefined
+  if (!product) return null;
+
+  const handleAdd = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    addToCart({ id, title, category, price, imageUrl });
+    addToCart({
+      id: product.id,
+      title: product.name,
+      category: product.category,
+      price: product.price,
+      imageUrl: product.image_url,
+    });
+    setAdded(true);
+    setTimeout(() => setAdded(false), 1500);
   };
 
+  // Nilai default jika di database kosong
+  const displaySize = product.size || '50 ml';
+  const displayRating = product.rating || 4.9;
+  const displayReviews = product.reviews || Math.floor(Math.random() * 50) + 50;
+
   return (
-    // ── FIX: hapus 'block' — sudah ada 'flex flex-col', conflict dengan 'flex'
     <Link
-      to={`/produk/${id}`}
-      className="bg-white rounded-[22px] border border-[#F3F4F6] p-4 shadow-sm hover:shadow-[0_8px_28px_rgba(236,107,165,0.12)] hover:border-[#fce7f0] transition-all duration-300 flex flex-col h-full group"
+      to={`/produk/${product.id}`}
+      className="flex-shrink-0 snap-start group flex flex-col w-full h-full"
     >
-      {/* Image container */}
-      <div className="bg-[#FAFAFA] rounded-[18px] aspect-square mb-4 flex items-center justify-center p-4 relative overflow-hidden">
-        {badge && (
-          <span className="absolute top-2.5 left-2.5 bg-[#EC6BA5] text-white text-[9px] font-poppins font-bold px-2.5 py-0.5 rounded-full z-10 shadow-sm">
-            {badge}
+      {/* Image box — background sesuai mockup Premium */}
+      <div
+        className="relative w-full rounded-2xl overflow-hidden mb-3 flex items-center justify-center bg-white"
+        style={{
+          aspectRatio: '1/1',
+          background: '#F9FAFB',
+          border: '1.5px solid #F3F4F6',
+          transition: 'border-color 0.25s, box-shadow 0.25s',
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.borderColor = '#fce7f0';
+          e.currentTarget.style.boxShadow = '0 6px 20px rgba(0,0,0,0.07)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.borderColor = '#F3F4F6';
+          e.currentTarget.style.boxShadow = 'none';
+        }}
+      >
+        {/* Badge (Misal: Best Seller) */}
+        {product.badge && (
+          <span
+            className="absolute top-2.5 left-2.5 z-10 font-poppins font-bold text-white"
+            style={{
+              background: 'linear-gradient(135deg, #EC6BA5, #D4538E)',
+              fontSize: 9,
+              padding: '3px 10px',
+              borderRadius: 99,
+              boxShadow: '0 2px 8px rgba(236,107,165,0.4)',
+            }}
+          >
+            {product.badge}
           </span>
         )}
-        {imageUrl ? (
+
+        {/* Foto produk dengan efek Blend Multiply */}
+        {product.image_url ? (
           <img
-            src={imageUrl}
-            alt={title}
-            className="object-contain w-full h-full mix-blend-multiply group-hover:scale-105 transition-transform duration-300"
+            src={product.image_url}
+            alt={product.name || 'Produk SESA'}
+            className="w-full h-full object-contain group-hover:scale-[1.06] transition-transform duration-400"
+            style={{ mixBlendMode: 'multiply', padding: '12px' }}
+            onError={(e) => {
+              e.target.style.display = 'none';
+              e.target.parentNode.style.background = '#fce7f0';
+            }}
           />
         ) : (
-          <div className="w-16 h-24 bg-[#fce7f0] rounded-xl opacity-60 group-hover:scale-105 transition-transform duration-300" />
+          <ShoppingCart size={32} className="text-[#EC6BA5] opacity-30" />
         )}
       </div>
 
-      {/* Info */}
-      <div className="flex flex-col flex-grow">
-        {category && (
-          <span className="text-[10px] font-inter font-semibold text-[#9CA3AF] uppercase tracking-wider mb-1">
-            {category}
-          </span>
-        )}
-
-        <h4 className="font-poppins font-bold text-[#1F2937] text-[13px] sm:text-[14px] leading-snug mb-1 line-clamp-2 group-hover:text-[#EC6BA5] transition-colors">
-          {title}
+      {/* Area Info Produk */}
+      <div className="flex flex-col flex-1 px-1">
+        {/* Nama produk */}
+        <h4
+          className="font-poppins font-bold text-slate-800 leading-snug mb-1 line-clamp-2 group-hover:text-[#EC6BA5] transition-colors"
+          style={{ fontSize: 13 }}
+        >
+          {product.name}
         </h4>
 
-        {size && (
-          <span className="font-inter text-[11px] text-[#9CA3AF] block mb-2.5">{size}</span>
-        )}
+        {/* Ukuran */}
+        <span className="font-inter text-[#9CA3AF] block mb-2" style={{ fontSize: 11 }}>
+          {displaySize}
+        </span>
 
-        {/* Rating */}
+        {/* Rating & Review */}
         <div className="flex items-center gap-1 mb-3">
           <Star size={11} className="text-[#F59E0B] fill-[#F59E0B]" />
-          <span className="font-inter text-[11px] text-slate-500 font-medium">{rating}</span>
-          {reviews && (
-            <span className="font-inter text-[11px] text-[#9CA3AF]">({reviews})</span>
-          )}
+          <span className="font-inter font-semibold text-slate-600" style={{ fontSize: 11 }}>
+            {displayRating}
+          </span>
+          <span className="font-inter text-[#9CA3AF]" style={{ fontSize: 11 }}>
+            ({displayReviews})
+          </span>
         </div>
 
-        {/* Price + Add button */}
-        <div className="mt-auto flex items-center justify-between">
-          <span className="font-poppins font-bold text-[#1F2937] text-[14px] sm:text-[15px]">
-            Rp {price?.toLocaleString('id-ID')}
+        {/* Harga + Tombol Add to Cart (Merapat ke bawah) */}
+        <div className="flex items-center justify-between mt-auto pt-2">
+          <span className="font-poppins font-bold text-slate-800" style={{ fontSize: 14 }}>
+            Rp {product.price?.toLocaleString('id-ID')}
           </span>
+
           <button
-            onClick={handleAddToCart}
+            onClick={handleAdd}
             aria-label="Tambah ke keranjang"
-            className="bg-[#EC6BA5] hover:bg-[#D4538E] active:scale-95 text-white p-2 rounded-full transition-all shadow-[0_3px_10px_rgba(236,107,165,0.35)] flex-shrink-0 relative z-10 flex items-center justify-center"
+            className="flex items-center justify-center transition-all active:scale-90"
+            style={{
+              width: 30,
+              height: 30,
+              borderRadius: '50%',
+              background: added
+                ? 'linear-gradient(135deg, #10b981, #059669)'
+                : 'linear-gradient(135deg, #EC6BA5, #D4538E)',
+              boxShadow: added
+                ? '0 3px 10px rgba(16,185,129,0.35)'
+                : '0 3px 10px rgba(236,107,165,0.38)',
+              border: 'none',
+              cursor: 'pointer',
+              flexShrink: 0,
+            }}
           >
-            <Plus size={17} />
+            {added ? (
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+            ) : (
+              <Plus size={15} color="white" strokeWidth={2.5} />
+            )}
           </button>
         </div>
       </div>

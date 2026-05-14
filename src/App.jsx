@@ -1,4 +1,7 @@
+import { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
+import ReactGA from 'react-ga4'; 
+
 import { CartProvider } from './context/CartContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Navbar from './components/Navbar';
@@ -13,10 +16,23 @@ import BookingPage from './components/BookingPage';
 import AdminDashboard from './components/AdminDashboard';
 import LoginPage from './components/LoginPage';
 import ArticlePage from './components/ArticlePage';
-import ArticleDetail from './components/ArticleDetail'; // Import komponen baru
+import ArticleDetail from './components/ArticleDetail';
 import AboutPage from './components/AboutPage';
 import ContactPage from './components/ContactPage';
 import ConsultationPage from './components/ConsultationPage';
+import TrackingPage from './components/TrackingPage'; // IMPORT BARU
+
+ReactGA.initialize('G-KODEPELACAKKAMU');
+
+const AnalyticsTracker = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    ReactGA.send({ hitType: 'pageview', page: location.pathname + location.search });
+  }, [location]);
+
+  return null; 
+};
 
 const ProtectedRoute = ({ children }) => {
   const { user } = useAuth();
@@ -29,6 +45,7 @@ const AppLayout = () => {
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
+      <AnalyticsTracker />
       {!isAdminRoute && <Navbar />}
       
       <div className="flex-grow">
@@ -39,9 +56,9 @@ const AppLayout = () => {
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/upload-resep" element={<UploadResepPage />} />
           <Route path="/booking" element={<BookingPage />} />
+          <Route path="/lacak-pesanan" element={<TrackingPage />} /> {/* ROUTE BARU */}
           
           <Route path="/artikel" element={<ArticlePage />} />
-          {/* Rute dinamis untuk melihat artikel secara penuh */}
           <Route path="/artikel/:id" element={<ArticleDetail />} />
           
           <Route path="/tentang-kami" element={<AboutPage />} />
